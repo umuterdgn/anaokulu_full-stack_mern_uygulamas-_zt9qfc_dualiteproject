@@ -21,16 +21,20 @@ const Card: React.FC<CardProps> = ({ title, images, imageUrl, onClick }) => {
       {/* Görsel Alanı */}
       <div className="relative w-full h-60 overflow-hidden bg-gray-50">
         
-        {/* Sinematik Hover Gradient'i (Görsele derinlik katar) */}
+        {/* Sinematik Hover Gradient'i */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <img 
           src={coverImage} 
           alt={title} 
-          className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110" 
+          /* GÜNCELLEME BURADA: 
+            - object-center: Resmi her zaman tam ortadan odaklar.
+            - scale-105: Üzerine gelince devasa büyümek yerine çok hafif ve şık bir şekilde yaklaşır.
+          */
+          className="w-full h-full object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-105" 
         />
 
-        {/* Modern Fotoğraf Rozeti (Glassmorphism - Cam Efekti) */}
+        {/* Modern Fotoğraf Rozeti */}
         {images && images.length > 1 && (
           <div className="absolute top-4 left-4 z-20 backdrop-blur-md bg-black/30 border border-white/20 text-white text-xs font-medium px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
             <ImageIcon className="w-3.5 h-3.5" />
