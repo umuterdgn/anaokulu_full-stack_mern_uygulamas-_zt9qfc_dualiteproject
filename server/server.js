@@ -7,18 +7,15 @@ import apiRoutes from './routes/api.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Bağlantısı
+// MongoDB Bağlantısı (Vercel her istekte burayı tetikler, mongoose bunu yönetir)
 const connectDB = async () => {
-  if (!process.env.MONGODB_URI || process.env.MONGODB_URI === 'YOUR_API_KEY') {
-    console.warn('⚠️ MONGODB_URI tanımlanmamış. Veritabanı işlemleri çalışmayacaktır.');
-    return;
-  }
+  if (mongoose.connection.readyState >= 1) return; // Zaten bağlıysa tekrar bağlama
+
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ MongoDB bağlantısı başarılı!');
@@ -32,11 +29,17 @@ connectDB();
 // Rotalar
 app.use('/api', apiRoutes);
 
-// Sağlık kontrolü
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend çalışıyor' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Sunucu http://localhost:${PORT} adresinde çalışıyor`);
-});
+// LOKALDE ÇALIŞTIRMAK İÇİN (Vercel bunu görmezden gelir)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Sunucu http://localhost:${PORT} adresinde çalışıyor`);
+  });
+}
+
+// VERCEL İÇİN EXPORT
+export default app;
