@@ -20,8 +20,8 @@ cloudinary.config({
 });
 
 // api.js dosyasında bu satırı bul:
-const upload = multer({ storage: multer.memoryStorage() });
-// GÜNCELLENDİ: Artık direkt dosya buffer'ını alıyor (çoklu yükleme için)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });// GÜNCELLENDİ: Artık direkt dosya buffer'ını alıyor (çoklu yükleme için)
 const streamUpload = (fileBuffer) => {
   return new Promise((resolve, reject) => {
     let stream = cloudinary.uploader.upload_stream(
