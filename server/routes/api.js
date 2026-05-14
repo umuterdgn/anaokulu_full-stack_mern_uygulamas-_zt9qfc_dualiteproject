@@ -154,7 +154,45 @@ router.post(
     }
   },
 );
+router.put("/activities/:id", authMiddleware, upload.array("images", 10), async (req, res) => {
+  try {
+    const { title, description } = req.body;
+    let updateData = { title, description };
 
+    // Eğer yeni resimler seçilmişse, onları da Cloudinary'ye yükle
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map((file) => streamUpload(file.buffer));
+      const results = await Promise.all(uploadPromises);
+      updateData.images = results.map((result) => result.secure_url);
+    }
+
+    const updatedActivity = await Activity.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    res.json(updatedActivity);
+  } catch (error) {
+    console.error("Aktivite güncelleme hatası:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// --- HİZMET GÜNCELLEME ROTASI ---
+router.put("/services/:id", authMiddleware, upload.array("images", 10), async (req, res) => {
+  try {
+    const { title, description } = req.body;
+    let updateData = { title, description };
+
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map((file) => streamUpload(file.buffer));
+      const results = await Promise.all(uploadPromises);
+      updateData.images = results.map((result) => result.secure_url);
+    }
+
+    const updatedService = await Service.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    res.json(updatedService);
+  } catch (error) {
+    console.error("Hizmet güncelleme hatası:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
 router.delete("/services/:id", authMiddleware, async (req, res) => {
   try {
     await Service.findByIdAndDelete(req.params.id);
