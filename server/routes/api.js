@@ -1,3 +1,4 @@
+import Settings from "../models/Settings.js";
 import express from "express";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
@@ -22,10 +23,11 @@ cloudinary.config({
 // api.js dosyasında bu satırı bul:
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });// GÜNCELLENDİ: Artık direkt dosya buffer'ını alıyor (çoklu yükleme için)
-const streamUpload = (fileBuffer) => {
+
+const streamUpload = (fileBuffer, resourceType = "auto") => {
   return new Promise((resolve, reject) => {
     let stream = cloudinary.uploader.upload_stream(
-      { folder: "kindergarten" },
+      { folder: "kindergarten", resource_type: resourceType }, // auto yerine video da alabilecek
       (error, result) => {
         if (result) resolve(result);
         else reject(error);
@@ -34,7 +36,46 @@ const streamUpload = (fileBuffer) => {
     streamifier.createReadStream(fileBuffer).pipe(stream);
   });
 };
+router.get("/settings", async (req, res) => {
+  try {
+    let settings = await Settings.findOne();
+    if (!settings) settings = await Settings.create({});
+    res.json(settings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+// Videoları almak için upload.fields kullanıyoruz
+router.put(
+  "/settings",
+  authMiddleware,
+  upload.fields([{ name: "heroVideo", maxCount: 1 }, { name: "aboutVideo", maxCount: 1 }]),
+  async (req, res) => {
+    try {
+      let settings = await Settings.findOne();
+      if (!settings) settings = new Settings({});
+
+      // Eğer yeni Hero videosu geldiyse yükle ("video" parametresiyle)
+      if (req.files && req.files["heroVideo"]) {
+        const result = await streamUpload(req.files["heroVideo"][0].buffer, "video");
+        settings.heroVideo = result.secure_url;
+      }
+      
+      // Eğer yeni Hakkımızda videosu geldiyse yükle
+      if (req.files && req.files["aboutVideo"]) {
+        const result = await streamUpload(req.files["aboutVideo"][0].buffer, "video");
+        settings.aboutVideo = result.secure_url;
+      }
+
+      await settings.save();
+      res.json(settings);
+    } catch (error) {
+      console.error("Ayar güncelleme hatası:", error);
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 // --- AUTH MİDDLEWARE ---
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
