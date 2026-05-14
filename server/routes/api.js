@@ -19,8 +19,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const upload = multer({ storage: multer.memoryStorage() });
-
+const upload = multer();
 // GÜNCELLENDİ: Artık direkt dosya buffer'ını alıyor (çoklu yükleme için)
 const streamUpload = (fileBuffer) => {
   return new Promise((resolve, reject) => {
