@@ -35,8 +35,10 @@ const About: React.FC = () => {
             className="bg-white/90 backdrop-blur-md p-10 md:p-14 rounded-3xl shadow-2xl"
           >
             <p className="text-xl text-gray-800 leading-relaxed mb-6 font-medium">
-              Mutlu Çocuklar Anaokulu olarak misyonumuz, her çocuğun bireysel farklılıklarını gözeterek, 
-              onların fiziksel, zihinsel ve duygusal gelişimlerini en üst düzeye çıkarmaktır. 
+              Çocuk Eli Anaokulu, çocukların hayal güçlerini özgürce keşfettikleri, güvenle büyüdükleri ve geleceğe ilk sağlam adımlarını attıkları sıcak bir yuvadır. Kurulduğumuz günden bu yana, okul öncesi eğitimin bir çocuğun hayatındaki en kritik dönem olduğunun bilinciyle hareket ediyor; her bir öğrencimizi sevgi, saygı ve ilgiyle kucaklıyoruz.
+​Misyonumuz, çocuklarımızın bilişsel, fiziksel, sosyal ve duygusal gelişimlerini en üst düzeyde desteklemektir. Modern eğitim yaklaşımlarını, oyun tabanlı öğrenme metotlarıyla harmanlayarak, çocuklara sadece bilgi vermiyor; merak etmeyi, sorgulamayı, paylaşmayı ve çevrelerine karşı duyarlı bireyler olmayı öğretiyoruz.
+​Güvenli, hijyenik ve çocukların motor becerilerini geliştirmeye yönelik özel olarak tasarlanmış kampüsümüzde, uzman eğitmen kadromuzla birlikte her günü yeni bir keşif yolculuğuna dönüştürüyoruz. Çocuk Eli Anaokulu olarak, en değerli varlıklarınız olan çocuklarınızı, kendi potansiyellerini keşfetmiş, özgüvenli ve mutlu bireyler olarak yarınlara hazırlamak için buradayız.
+​Çünkü biz, geleceğin "çocukların küçük elleriyle" şekilleneceğine inanıyoruz.
             </p>
             <p className="text-xl text-gray-800 leading-relaxed font-medium">
               Modern eğitim yaklaşımlarımız ve sevgi dolu uzman kadromuzla, çocuklarınızı geleceğe hazırlıyoruz.
